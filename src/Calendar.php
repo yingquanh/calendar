@@ -6,6 +6,9 @@
  * Date: 2017/11/22
  * Time: 13:48
  */
+namespace DarkVisitor\Calendar;
+
+include "Lunar.php";
 
 class Calendar
 {
@@ -129,6 +132,7 @@ class Calendar
         for ($i=0; $i < 7; $i++){
             if ($i >= $firstDayWeek){
                 $week[$i]['day'] = $indexDay;
+                $week[$i]['holidays'] = $this->is_holidays($this->year.'-'.$month.'-'.$indexDay);
                 $indexDay++;
             }else{
                 $week[$i] = [];
@@ -140,6 +144,8 @@ class Calendar
         for ($i=0; $i < $fullWeeks; $i++){
             for ($j=0; $j < 7; $j++){
                 $week[$j]['day'] = $indexDay;
+                $week[$j]['holidays'] = $this->is_holidays($this->year.'-'.$month.'-'.$indexDay);
+                $indexDay++;
             }
             $monthArr[] = $week;
         }
@@ -149,6 +155,8 @@ class Calendar
             for ($i=0; $i < 7; $i++){
                 if ($i < $lastDays){
                     $week[$i]['day'] = $indexDay;
+                    $week[$i]['holidays'] = $this->is_holidays($this->year.'-'.$month.'-'.$indexDay);
+                    $indexDay++;
                 }else{
                     $week[$i] = [];
                 }
@@ -210,18 +218,65 @@ class Calendar
         $holidays = '';
         $year = date('Y', strtotime($date));
         $month = date('m', strtotime($date));
-        $day = date('d', strtotime($date));
+        $days = date('d', strtotime($date));
 
+        if (array_key_exists(date('m-d', strtotime($date)), $this->holidays)){
+            $GregorianHolidays = $this->holidays[date('m-d', strtotime($date))]['Gregorian'];
+        }
 
-        $GregorianHolidays = $this->holidays[date('m-d', strtotime($date))]['Gregorian'];
-        $LunarHolidays = $this->holidays['']['Lunar'];
+        //获取公历对应的农历
+        $lunar = new \Lunar();
+        $monthDay = $lunar->convertSolarToLunar($year, $month, $days);
+        $monthDay = $this->chineseCharactersTurnNumber($monthDay[1]).'-'.($monthDay[5]<10?'0'.$monthDay[5]:$monthDay[5]);
 
-        if ($GregorianHolidays){
+        if (array_key_exists($monthDay, $this->holidays)){
+            $LunarHolidays = $this->holidays[$monthDay]['Lunar'];
+        }
+
+        if (isset($GregorianHolidays) && !empty($GregorianHolidays)){
             $holidays = $GregorianHolidays;
-        }elseif ($LunarHolidays){
+        }elseif (isset($LunarHolidays) && !empty($LunarHolidays)){
             $holidays = $LunarHolidays;
         }
 
         return $holidays;
+    }
+
+
+    /**
+     * 月份汉字转数字
+     * @param $string
+     * @return mixed
+     */
+    public function chineseCharactersTurnNumber($string)
+    {
+        $months = [
+            '正月' => '01',
+            '二月' => '02',
+            '三月' => '03',
+            '四月' => '04',
+            '五月' => '05',
+            '六月' => '06',
+            '七月' => '07',
+            '八月' => '08',
+            '九月' => '09',
+            '十月' => '10',
+            '冬月' => '11',
+            '腊月' => '12',
+            '闰一月' => '01',
+            '闰二月' => '02',
+            '闰三月' => '03',
+            '闰四月' => '04',
+            '闰五月' => '05',
+            '闰六月' => '06',
+            '闰七月' => '07',
+            '闰八月' => '08',
+            '闰九月' => '09',
+            '闰十月' => '10',
+            '闰十一月' => '11',
+            '闰十二月' => '12'
+        ];
+
+        return $months[$string];
     }
 }
