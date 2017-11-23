@@ -1,0 +1,19 @@
+{
+    "name": "darkvisitor/calendar",
+    "description": "获取一年的日历或一个月的日历",
+    "keywords": ["PHP","calendar"],
+    "type": "library",
+    "license": "LGPL",
+    "authors": [
+        {
+            "name": "DarkVisitor",
+            "email": "472458908@qq.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "DarkVisitor\\Calendar": "src/"
+        }
+    }
+}
