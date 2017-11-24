@@ -133,9 +133,10 @@ class Calendar
             if ($i >= $firstDayWeek){
                 $week[$i]['day'] = $indexDay;
                 $week[$i]['holidays'] = $this->is_holidays($this->year.'-'.$month.'-'.$indexDay);
+                $week[$i]['dateTime'] = date('Y-m-d', strtotime($this->year.'-'.$month.'-'.$indexDay));
                 $indexDay++;
             }else{
-                $week[$i] = [];
+                $week[$i] = ['day'=>'', 'holidays'=>'', 'dateTime'=>''];
             }
         }
         $monthArr[] = $week;
@@ -145,6 +146,7 @@ class Calendar
             for ($j=0; $j < 7; $j++){
                 $week[$j]['day'] = $indexDay;
                 $week[$j]['holidays'] = $this->is_holidays($this->year.'-'.$month.'-'.$indexDay);
+                $week[$j]['dateTime'] = date('Y-m-d', strtotime($this->year.'-'.$month.'-'.$indexDay));
                 $indexDay++;
             }
             $monthArr[] = $week;
@@ -156,9 +158,10 @@ class Calendar
                 if ($i < $lastDays){
                     $week[$i]['day'] = $indexDay;
                     $week[$i]['holidays'] = $this->is_holidays($this->year.'-'.$month.'-'.$indexDay);
+                    $week[$i]['dateTime'] = date('Y-m-d', strtotime($this->year.'-'.$month.'-'.$indexDay));
                     $indexDay++;
                 }else{
-                    $week[$i] = [];
+                    $week[$i] = ['day'=>'', 'holidays'=>'', 'dateTime'=>''];
                 }
             }
             $monthArr[] = $week;
