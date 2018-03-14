@@ -3,7 +3,7 @@
     "description": "获取一年的日历或一个月的日历",
     "keywords": ["PHP","calendar"],
     "type": "library",
-    "license": "LGPL",
+    "license": "MIT",
     "authors": [
         {
             "name": "DarkVisitor",
